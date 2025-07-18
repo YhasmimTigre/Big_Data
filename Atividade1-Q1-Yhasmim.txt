@@ -1,0 +1,74 @@
+-- Atividade 1 - Questão 1 - Restrições de Integridade
+
+-- a) Insira >‘943775543’, ‘Roberto’, ‘F’, ‘Silva’, ‘M’, ‘Rua X, 22 – Araucária – PR’, ‘1952-06-21’, ‘888665555’, ‘1’, 58000< em EMPREGADO
+INSERT INTO empregado 
+VALUES ('943775543', 'Roberto', 'F', 'Silva', 'M', 'Rua X, 22 – Araucária – PR', '1952-06-21', '888665555', '1', '58000.00');
+
+-- Inserido com sucesso
+
+-- b) Insira >‘4’, ProdutoA’, ‘Araucaria’, ‘2’< em PROJETO
+INSERT INTO projeto
+VALUES ('4', 'ProdutoA', 'Araucaria', '2');
+
+-- ERRO: 23503: insert or update on table "projeto" violates foreign key constraint "fk_projeto_departamento" DETAIL:  Key (dnum)=(2) is not present in table "departamento".
+--- Houve falha na inserção por violação de chave estrangeira, pois a chave (dnum)=(2) não existe na tabela departamento.
+
+-- c) Insira >‘4’, ‘Produção’, ‘943775543’, ‘1998-10-01’< em DEPARTAMENTO
+INSERT INTO departamento
+VALUES ('4', 'Produção', '943775543', '1998-10-01');
+-- ERROR:  23505: duplicate key value violates unique constraint "departamento_pkey" DETAIL:  Key (dnumero)=(4) already exists.
+-- Não podemos inserir o chave 4, pois ela já existe em departamento.
+
+--d) Insira >‘677678989’, null, 40,0< em TRABALHA.
+INSERT INTO trabalha
+VALUES ('677678989', null, 40.0);
+-- ERROR:  23502: null value in column "pno" of relation "trabalha" violates not-null constraint DETAIL:  Failing row contains (677678989, null, 40).
+-- não podemos inserir valores nulos na coluna "pno".
+
+--e) Insira >‘453453453’, ‘Joao’, ‘M’, ‘1970-12-12’, ‘CONJUGE’< em DEPENDENTE
+INSERT INTO dependente
+VALUES ('453453453', 'Joao', 'M', '1970-12-12', 'CONJUGE');
+
+-- Inserido com sucesso.
+
+-- f) Remova as tuplas de TRABALHA com ESSN = ‘333445555’
+DELETE FROM trabalha
+WHERE essn = '333445555';
+
+-- Deletado com sucesso.
+
+-- g) Remova a tupla de EMPREGADO com SSN = ‘987654321’
+DELETE FROM empregado
+WHERE ssn = '987654321';
+-- ERROR:  23503: update or delete on table "empregado" violates foreign key constraint "fk_empregado_empregado" on table "empregado" DETAIL:  Key (ssn)=(987654321) is still referenced from table "empregado".
+-- A tentativa de deletar o ssn do empregado viola a chave estrangeira "fk_empregado_empregado" que é referenciada em uma tabela dependente. 
+
+-- h) Remova a tupla de PROJETO com PJNOME = 'ProdutoX'
+DELETE FROM projeto
+WHERE pjnome = 'ProdutoX'; 
+-- ERROR:  23503: update or delete on table "projeto" violates foreign key constraint "fk_trabalha_projeto" on table "trabalha" DETAIL:  Key (pnumero)=(1 ) is still referenced from table "trabalha".
+-- Novamente, temos uma violação de chave estrangeira. Não podemos deletar o projeto 'ProdutoX' pois ainda existem empregados trabalhando nele.
+
+-- i) Modifique o GERSSN e GERDATAINICIO da tupla de DEPARTAMENTO com DNUMERO = 5 para ‘123456789’ e ‘1999-01-10’, respectivamente.
+
+UPDATE departamento
+SET gerssn = '123456789', gerdatainicio= '1999-01-10'
+WHERE dnumero = '5';
+
+-- Atualizado com sucesso.
+
+-- j) Modifique o atributo SUPERSSN da tupla EMPREGADO com SSN = ‘999887777’ para ‘943775543’
+
+UPDATE empregado
+SET superssn = '943775543'
+WHERE ssn = '999887777';
+
+-- Atualizado com sucesso.
+
+-- k) Modifique o atributo HORAS da tupla de TRABALHA com ESSN = ‘999887777’ e PNO = ‘10’ para 5,0.
+
+UPDATE trabalha
+SET horas = 5.0
+WHERE essn = '999887777' AND pno = '10';
+
+-- Atualizado com sucesso.
